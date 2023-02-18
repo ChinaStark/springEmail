@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+
+<link rel="SHORTCUT ICON" HREF="./favicon.ico">
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>邮件发送器</title>
+</head>
+<body>
+<script src="js/vue.js"></script>
+<!--<script src="element-ui/lib/in"></script>-->
+<script src="element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+</body>
+<div id="a" style="width: 60%;margin: 0 20%">
+    <i class="el-icon-user-solid" style="margin: 0 30px">  {{sendinfo.count}}</i>
+    <i class="el-icon-mobile-phone" password>{{sendinfo.pwd}}</i>
+
+    <el-button type="primary" round @click="dialogFormVisible01 = true">登陆</el-button>
+
+    <el-dialog title="发件人邮箱账号" :visible.sync="dialogFormVisible01">
+        <el-form >
+            <el-form-item label="邮箱账号" :label-width="formLabelWidth">
+                <el-input v-model="sendinfo.count" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="授权码" :label-width="formLabelWidth">
+                <el-input v-model="sendinfo.pwd" autocomplete="off"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible01 = false">取 消</el-button>
+            <el-button type="primary" @click="dialogFormVisible01 = false">确 定</el-button>
+        </div>
+    </el-dialog>
+
+
+    <br><br>
+    <template>群组名称
+        <el-select v-model="value" placeholder="请选择你要发送的群组名字">
+            <el-option
+                    v-for="item in options"
+                    :key="item"
+                    :label="item"
+                    :value="item">
+            </el-option>
+        </el-select>
+    </template>
+
+    <el-button round @click = "search()">查询</el-button>
+    <el-button type="info" round @click = "getAll()">取消</el-button>
+    <el-button type="text" @click="dialogFormVisible = true"> <el-button type="primary">添加联系人</el-button></el-button>
+
+    <br><br>
+    <template>
+        <el-table
+                v-loading="loading"
+                ref="multipleTable"
+                :data="tableData"
+                tooltip-effect="dark"
+                style="width: 100%"
+                @selection-change="handleSelectionChange">
+            <el-table-column
+                    type="selection"
+                    width="55">
+            </el-table-column>
+            <el-table-column
+                    label="姓名"
+                    width="120">
+                <template slot-scope="scope">{{ scope.row.friend_name }}</template>
+            </el-table-column>
+            <el-table-column
+                    prop="email_number"
+                    label="地址"
+                    width="120">
+            </el-table-column>
+            <el-table-column
+                    prop="my_group"
+                    label="分组"
+                    show-overflow-tooltip>
+            </el-table-column>
+        </el-table>
+    </template>
+    <br><br>
+    <el-form label-width="80px" :model="sendinfo">
+        <el-form-item label="邮件主题">
+            <el-input v-model="sendinfo.mainly" ></el-input>
+        </el-form-item>
+        <el-form-item label="邮件内容">
+            <el-input type="textarea" v-model="sendinfo.msg"  ></el-input>
+        </el-form-item>
+        <el-form-item style="margin: 0 35%">
+            <el-button type="primary" v-loading= loading01 @click="onSubmit">立即发送</el-button>
+        </el-form-item>
+    </el-form>
+
+
+    <el-dialog title="添加信息" :visible.sync="dialogFormVisible">
+        <el-form :model="addInfo">
+            <el-form-item label="姓名" :label-width="formLabelWidth">
+                <el-input v-model="addInfo.friend_name" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="邮件地址" :label-width="formLabelWidth">
+                <el-input v-model="addInfo.email_number" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="群组" :label-width="formLabelWidth">
+                <el-select v-model="addInfo.my_group" placeholder="群组">
+                    <el-option
+                            v-for="item in options"
+                            :key="item"
+                            :label="item"
+                            :value="item">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="add()">确 定</el-button>
+        </div>
+    </el-dialog>
+
+
+
+</div>
+
+<script>
+
+    new Vue({
+        el:"#a",
+        data() {
+            return {
+                dialogFormVisible01: false,
+                dialogFormVisible: false,
+                addInfo:{
+                    email_number:"",
+                    friend_name:"",
+                    my_group:"",
+                    extends_grid:""
+                },
+                formLabelWidth: '120px',
+                loading01 : false,
+                options: [],
+                loading: true,
+                value: 'all',/*现实选择的信息(群组名称)*/
+                tableData: [],
+
+                sendinfo:{
+                    email: [],
+                    msg:"",/*邮件信息*/
+                    mainly:"",/*邮件主题*/
+                    pwd : "******",
+                    count: "未登录"
+                }
+            }
+        },
+        created() {
+            this.getAll();
+            this.loading = false;
+        },
+        methods: {
+            /*添加信息*/
+            add(){
+                let _this = this
+                if(_this.addInfo.friend_name === ''){
+                    _this.$notify.error({
+                        title: '警告',
+                        message: '请认真填写',
+                    });
+                }else {
+                    this.dialogFormVisible = false;
+                    axios({
+                        method:"post",
+                        url:"/email",
+                        data:_this.addInfo
+                    }).then(function (res){
+                        if(res.data.data.message === "insert fail!"){
+                            _this.$notify.error({
+                                title: '警告',
+                                message: 'insert fail!',
+                            });
+                        }else{
+                            _this.$notify({
+                                title: '成功',
+                                message: '插入成功',
+                                type: 'success'
+                            });
+                        }
+                    })
+                }
+
+            },
+            getAll(){
+                axios.get("/email/all").then((res)=>{
+                    this.tableData = res.data.data;
+                });
+                axios.get("/email").then((res)=>{
+                    this.options = res.data.data;
+                });
+            },
+            /*发送*/
+            onSubmit() {
+                let  _this = this
+                if(this.sendinfo.count === '未登录'){
+                    this.$notify.error({
+                        title: '警告',
+                        message: '你当前暂未登录',
+                    });
+                }else{
+                    _this.loading01 = true
+                    console.log(_this.sendinfo)
+                    axios({
+                        method:"post",
+                        url:"email/send",
+                        data:_this.sendinfo
+                    }).then((res)=>{
+                        if(res.data.code === 20040){
+                            _this.$notify.error({
+                                title: '警告',
+                                message: 'send fail!',
+                            });
+                        }else {
+                            _this.$notify({
+                                title: '成功',
+                                message: '发送成功',
+                                type: 'success'
+                            });
+                        }
+                        _this.loading01 = false;
+                    })
+
+                }
+
+            },
+            search(){
+                let _this = this;
+                axios.get("/email/"+ this.value).then((res)=>{
+                    this.tableData = res.data.data;
+                    if(res.data.code !== 20011) {
+                        _this.$notify.error({
+                            title: '警告',
+                            message: 'search fail!',
+                        });
+                        _this.tableData = []
+                    }else {
+                            _this.$notify({
+                                title: '成功',
+                                message: 'search success!!!',
+                                type: 'success'
+                            });
+                        }
+
+                    });
+                 },
+            handleSelectionChange(val) {
+                this.sendinfo.emails = val;
+                console.log(this.sendinfo.emails)
+            },
+            handleClick(row) {
+                console.log(row);
+            }
+        }
+    })
+</script>
+
+</html>
