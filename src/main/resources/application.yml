@@ -6,8 +6,9 @@ spring:
     url: jdbc:mysql://localhost:3306/spring_ssm
   mail:
     host: Smtp.163.com
-    username: longzl202109@163.com
-    password: ULINPTCHLMOMXICE
+#    TODO 记得添加密码和你的邮箱
+    username: NULL
+    password: NULL
     port: 25
     default-encoding: UTF-8
     properties.mail.ssl.enable: true
