@@ -149,7 +149,7 @@
                 tableData: [],
 
                 sendinfo:{
-                    email: [],
+                    EmailDO: [],
                     msg:"",/*邮件信息*/
                     mainly:"",/*邮件主题*/
                     pwd : "******",
@@ -174,7 +174,7 @@
                     this.dialogFormVisible = false;
                     axios({
                         method:"post",
-                        url:"/email",
+                        url:"/EmailDO",
                         data:_this.addInfo
                     }).then(function (res){
                         if(res.data.data.message === "insert fail!"){
@@ -194,10 +194,10 @@
 
             },
             getAll(){
-                axios.get("/email/all").then((res)=>{
+                axios.get("/EmailDO/all").then((res)=>{
                     this.tableData = res.data.data;
                 });
-                axios.get("/email").then((res)=>{
+                axios.get("/EmailDO").then((res)=>{
                     this.options = res.data.data;
                 });
             },
@@ -214,7 +214,7 @@
                     console.log(_this.sendinfo)
                     axios({
                         method:"post",
-                        url:"email/send",
+                        url:"EmailDO/send",
                         data:_this.sendinfo
                     }).then((res)=>{
                         if(res.data.code === 20040){
@@ -237,7 +237,7 @@
             },
             search(){
                 let _this = this;
-                axios.get("/email/"+ this.value).then((res)=>{
+                axios.get("/EmailDO/"+ this.value).then((res)=>{
                     this.tableData = res.data.data;
                     if(res.data.code !== 20011) {
                         _this.$notify.error({
@@ -256,8 +256,8 @@
                     });
                  },
             handleSelectionChange(val) {
-                this.sendinfo.emails = val;
-                console.log(this.sendinfo.emails)
+                this.sendinfo.EmailDOS = val;
+                console.log(this.sendinfo.EmailDOS)
             },
             handleClick(row) {
                 console.log(row);

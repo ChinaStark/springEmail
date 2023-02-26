@@ -1,6 +1,6 @@
 package com.example.domian;
 
-public class ResultFromCode {
+public class ResultCodeDTO {
     private Integer code;
     private Object data;
     private String message;
@@ -14,13 +14,13 @@ public class ResultFromCode {
                 '}';
     }
 
-    public ResultFromCode(Integer code, Object data, String message) {
+    public ResultCodeDTO(Integer code, Object data, String message) {
         this.code = code;
         this.data = data;
         this.message = message;
     }
 
-    public ResultFromCode(Integer code, Object data) {
+    public ResultCodeDTO(Integer code, Object data) {
         this.code = code;
         this.data = data;
     }

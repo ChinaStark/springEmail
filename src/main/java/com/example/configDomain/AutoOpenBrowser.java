@@ -7,10 +7,13 @@ import org.springframework.context.event.EventListener;
 
 import java.io.IOException;
 
+/**
+ * 当我们启动服务器的时候就会自动的打开浏览器
+ */
 @Configuration
-public class AutoBrower {
+public class AutoOpenBrowser {
     @EventListener({ApplicationReadyEvent.class})
-    void applicationReadyEvent() {
+    public void applicationReadyEvent() {
         // 这里需要注url:端口号+测试类方法名
         String url = "http://localhost:8080";
         Runtime runtime = Runtime.getRuntime();

@@ -2,8 +2,8 @@ package com.example.domian;
 
 import java.util.List;
 
-public class sends {
-    private List<email> emails;
+public class SendBO {
+    private List<EmailDO> EmailDOS;
     private String msg;
     private String mainly;
     private String pwd;
@@ -12,7 +12,7 @@ public class sends {
     @Override
     public String toString() {
         return "sends{" +
-                "emails=" + emails +
+                "emails=" + EmailDOS +
                 ", msg='" + msg + '\'' +
                 ", mainly='" + mainly + '\'' +
                 ", pwd='" + pwd + '\'' +
@@ -20,8 +20,8 @@ public class sends {
                 '}';
     }
 
-    public void setEmails(List<email> emails) {
-        this.emails = emails;
+    public void setEmails(List<EmailDO> EmailDOS) {
+        this.EmailDOS = EmailDOS;
     }
 
     public void setMsg(String msg) {
@@ -40,8 +40,8 @@ public class sends {
         this.count = count;
     }
 
-    public List<email> getEmails() {
-        return emails;
+    public List<EmailDO> getEmails() {
+        return EmailDOS;
     }
 
     public String getMsg() {
@@ -60,14 +60,14 @@ public class sends {
         return count;
     }
 
-    public sends(List<email> emails, String msg, String mainly, String pwd, String count) {
-        this.emails = emails;
+    public SendBO(List<EmailDO> EmailDOS, String msg, String mainly, String pwd, String count) {
+        this.EmailDOS = EmailDOS;
         this.msg = msg;
         this.mainly = mainly;
         this.pwd = pwd;
         this.count = count;
     }
 
-    public sends() {
+    public SendBO() {
     }
 }

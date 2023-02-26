@@ -1,6 +1,6 @@
 package com.example.domian;
 
-public class Code {
+public class StateCodeDO {
     public static final Integer GET_OK = 20011;
     public static final Integer UPDATE_OK = 20021;
     public static final Integer DELETE_OK = 20031;

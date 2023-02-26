@@ -1,16 +1,13 @@
 package com.example;
 
-import com.example.configDomain.MailProperties;
-import com.example.dao.emailDao;
-import com.example.domian.ResultFromCode;
-import com.example.domian.email;
+import com.example.dao.EmailDao;
+import com.example.domian.EmailDO;
+import com.example.domian.ResultCodeDTO;
 import com.example.service.Impl.emailServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.management.PersistentMBean;
-import java.io.FilterOutputStream;
 import java.util.List;
 
 @SpringBootTest
@@ -18,7 +15,7 @@ class SpringEmailApplicationTests {
     @Autowired
     private emailServiceImpl emailService;
     @Autowired
-    private emailDao emailDao;
+    private EmailDao emailDao;
     @Test
     void getGroupName() {
         List<String> emailGroup = emailDao.getEmailGroup();
@@ -27,16 +24,16 @@ class SpringEmailApplicationTests {
 
     @Test
     void getAllInfoByGroupName(){
-        List<email> me = emailDao.getAllInfoByGroupName("me");
+        List<EmailDO> me = emailDao.getAllInfoByGroupName("me");
         System.out.println(me);
     }
     @Test
     public void serviceTest(){
-        ResultFromCode me = emailService.getAllInfoByGroupName("me");
-        List<email> data = (List<email>) me.getData();
+        ResultCodeDTO me = emailService.getAllInfoByGroupName("me");
+        List<EmailDO> data = (List<EmailDO>) me.getData();
         System.out.println(data.get(1).getEmail_number());
-        for (email email : data) {
-            String email_number = email.getEmail_number();
+        for (EmailDO emailDO : data) {
+            String email_number = emailDO.getEmail_number();
             System.out.println(email_number);
         }
     }

@@ -1,17 +1,17 @@
 package com.example.domian;
 
 public class
-email {
+EmailDO {
     private int id;
     private String Email_number;
     private String friend_name;
     private String My_group;
     private String extends_grid;
 
-    public email() {
+    public EmailDO() {
     }
 
-    public email(String email_number, String friend_name, String my_group, String extends_grid) {
+    public EmailDO(String email_number, String friend_name, String my_group, String extends_grid) {
         Email_number = email_number;
         this.friend_name = friend_name;
         My_group = my_group;
