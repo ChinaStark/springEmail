@@ -10,6 +10,7 @@ import java.util.List;
 @Mapper
 public interface EmailDao {
 
+
     @Select("select * from data_email;")
     List<EmailDO> getAllInfo();
     /*查询群组id*/
